@@ -3,56 +3,124 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tools • @kavve_ra</title>
+  <title>Tools • Affiliate</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✍️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* ─── Reset ─── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #0f0f0f;
-      color: #fff;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: #161412;
+      color: #f2ede6;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 40px 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
+
     .container { max-width: 560px; width: 100%; }
 
-    /* Header */
-    .header { text-align: center; margin-bottom: 32px; }
-    .header h1 { font-size: 20px; font-weight: 700; }
-    .header p { font-size: 13px; color: #666; margin-top: 4px; }
-    .header .tools-nav { display: flex; gap: 8px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
-    .header .tools-nav a { color: #888; text-decoration: none; font-size: 12px; padding: 6px 14px; border: 1px solid #222; border-radius: 20px; transition: all .2s; }
-    .header .tools-nav a:hover, .header .tools-nav a.active { color: #fff; border-color: #555; background: #1a1a1a; }
-
-    /* Card */
-    .card {
-      background: #141414;
-      border: 1px solid #222;
-      border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 16px;
+    /* ─── Header ─── */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
     }
-    .card-title {
-      font-size: 13px;
+    .header h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      color: #f2ede6;
+    }
+    .header h1 .accent { color: #7c5cfc; }
+    .header .sub {
+      font-size: 14px;
+      color: #6b6359;
+      margin-top: 6px;
+      font-weight: 400;
+    }
+    .header .tools-nav {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .header .tools-nav a {
+      color: #6b6359;
+      text-decoration: none;
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      font-size: 12px;
       font-weight: 600;
-      color: #888;
+      letter-spacing: 0.8px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      padding: 8px 18px;
+      border: 1px solid #2e2a26;
+      border-radius: 9999px;
+      transition: all .2s ease;
+    }
+    .header .tools-nav a:hover,
+    .header .tools-nav a.active {
+      color: #f2ede6;
+      border-color: #4a3a8a;
+      background: rgba(124, 92, 252, 0.1);
+    }
+
+    /* ─── Card ─── */
+    .card {
+      background: #1e1c1a;
+      border: 1px solid #2e2a26;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 20px;
+      transition: border-color .2s ease;
+    }
+    .card:hover { border-color: #34302c; }
+    .card-title {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: #6b6359;
+      margin-bottom: 16px;
+    }
+    .card-subtitle {
+      font-size: 13px;
+      color: #6b6359;
+      margin-top: -10px;
       margin-bottom: 16px;
     }
 
-    /* Input */
+    /* ─── Color-block card variants ─── */
+    .card-purple {
+      border-color: rgba(124, 92, 252, 0.15);
+      background: #1e1828;
+    }
+    .card-green {
+      border-color: rgba(74, 222, 128, 0.10);
+      background: #141e16;
+    }
+
+    /* ─── Input ─── */
     .input-group { margin-bottom: 16px; }
     .input-group:last-child { margin-bottom: 0; }
     .input-group label {
       display: block;
+      font-family: 'Space Grotesk', system-ui, sans-serif;
       font-size: 12px;
-      color: #888;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      color: #a89f94;
       margin-bottom: 6px;
-      font-weight: 500;
     }
     .input-group input,
     .input-group textarea,
@@ -60,97 +128,124 @@
       width: 100%;
       padding: 12px 14px;
       border-radius: 10px;
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      color: #fff;
+      background: #2a2724;
+      border: 1px solid #2e2a26;
+      color: #f2ede6;
       font-size: 14px;
+      font-family: 'Inter', system-ui, sans-serif;
       outline: none;
-      transition: border 0.2s;
-      font-family: inherit;
+      transition: border-color .2s ease, box-shadow .2s ease;
     }
     .input-group input:focus,
     .input-group textarea:focus,
     .input-group select:focus {
-      border-color: #555;
+      border-color: #7c5cfc;
+      box-shadow: 0 0 0 3px rgba(124, 92, 252, 0.15);
     }
     .input-group input::placeholder,
-    .input-group textarea::placeholder { color: #444; }
+    .input-group textarea::placeholder { color: #4a443e; }
     .input-group textarea { resize: vertical; min-height: 80px; }
-    .input-group select option { background: #1a1a1a; color: #fff; }
+    .input-group select option { background: #2a2724; color: #f2ede6; }
 
-    /* Buttons */
+    /* ─── Buttons ─── */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 12px 24px;
-      border-radius: 10px;
+      padding: 12px 28px;
+      border-radius: 9999px;
+      font-family: 'Space Grotesk', system-ui, sans-serif;
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 500;
+      letter-spacing: 0.1px;
       border: none;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all .2s ease;
       width: 100%;
-      font-family: inherit;
+      line-height: 1.2;
     }
     .btn-primary {
-      background: #fff;
-      color: #0f0f0f;
+      background: #7c5cfc;
+      color: #ffffff;
     }
-    .btn-primary:hover { background: #e0e0e0; }
+    .btn-primary:hover { background: #9080ff; }
+    .btn-primary:active { background: #6a4ae0; }
     .btn-primary:disabled {
       opacity: 0.4;
       cursor: not-allowed;
+      background: #7c5cfc;
     }
     .btn-secondary {
-      background: #1a1a1a;
-      color: #fff;
-      border: 1px solid #2a2a2a;
+      background: #2a2724;
+      color: #f2ede6;
+      border: 1px solid #2e2a26;
     }
-    .btn-secondary:hover { background: #242424; }
+    .btn-secondary:hover {
+      background: #34302c;
+      border-color: #3d3833;
+    }
     .btn-sm {
-      padding: 8px 14px;
+      padding: 10px 18px;
       font-size: 12px;
       width: auto;
     }
+    .btn-danger {
+      background: transparent;
+      color: #ff4444;
+      border: 1px solid rgba(255, 68, 68, 0.2);
+    }
+    .btn-danger:hover {
+      background: rgba(255, 68, 68, 0.1);
+      border-color: rgba(255, 68, 68, 0.4);
+    }
 
-    /* Product Preview */
+    /* ─── Product Preview ─── */
     .product-preview {
       display: none;
       margin-top: 16px;
       padding: 16px;
-      background: #1a1a1a;
-      border-radius: 12px;
-      border: 1px solid #2a2a2a;
+      background: #2a2724;
+      border-radius: 10px;
+      border: 1px solid #2e2a26;
     }
     .product-preview.show { display: block; }
-    .product-preview .prod-img {
-      width: 80px;
-      height: 80px;
-      border-radius: 10px;
-      background: #222;
-      object-fit: cover;
-      float: left;
-      margin-right: 14px;
+    .product-preview .prod-row {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
     }
+    .product-preview .prod-img {
+      width: 72px;
+      height: 72px;
+      min-width: 72px;
+      border-radius: 10px;
+      background: #1e1c1a;
+      object-fit: cover;
+      border: 1px solid #2e2a26;
+    }
+    .product-preview .prod-img[src=""] { display: none; }
+    .product-preview .prod-info { flex: 1; min-width: 0; }
     .product-preview .prod-name {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
       font-size: 15px;
       font-weight: 600;
+      line-height: 1.3;
+      color: #f2ede6;
       margin-bottom: 4px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
     .product-preview .prod-price {
       font-size: 14px;
       color: #4ade80;
       font-weight: 600;
     }
-    .product-preview::after {
-      content: '';
-      display: table;
-      clear: both;
-    }
+    .product-preview .prod-price:empty { display: none; }
 
-    /* Caption Style Tags */
+    /* ─── Style Tags (pill tabs) ─── */
     .style-tags {
       display: flex;
       flex-wrap: wrap;
@@ -158,24 +253,28 @@
       margin-bottom: 16px;
     }
     .style-tag {
-      padding: 8px 14px;
-      border-radius: 20px;
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      font-size: 12px;
-      color: #aaa;
+      padding: 8px 16px;
+      border-radius: 9999px;
+      background: #2a2724;
+      border: 1px solid #2e2a26;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 13px;
+      color: #a89f94;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all .2s ease;
       user-select: none;
     }
-    .style-tag:hover { border-color: #444; }
+    .style-tag:hover {
+      border-color: #3d3833;
+      color: #f2ede6;
+    }
     .style-tag.active {
-      background: #fff;
-      color: #0f0f0f;
-      border-color: #fff;
+      background: #7c5cfc;
+      color: #ffffff;
+      border-color: #7c5cfc;
     }
 
-    /* Tone Toggle */
+    /* ─── Tone Toggle ─── */
     .tone-row {
       display: flex;
       gap: 8px;
@@ -183,36 +282,42 @@
     }
     .tone-btn {
       flex: 1;
-      padding: 10px;
-      border-radius: 10px;
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      color: #aaa;
+      padding: 10px 12px;
+      border-radius: 9999px;
+      background: #2a2724;
+      border: 1px solid #2e2a26;
+      color: #a89f94;
+      font-family: 'Inter', system-ui, sans-serif;
       font-size: 12px;
       text-align: center;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all .2s ease;
     }
-    .tone-btn:hover { border-color: #444; }
+    .tone-btn:hover {
+      border-color: #3d3833;
+      color: #f2ede6;
+    }
     .tone-btn.active {
-      background: #fff;
-      color: #0f0f0f;
-      border-color: #fff;
+      background: #7c5cfc;
+      color: #ffffff;
+      border-color: #7c5cfc;
     }
 
-    /* Caption Output */
+    /* ─── Caption Output ─── */
     .caption-output {
       display: none;
-      margin-top: 16px;
+      margin-top: 0;
     }
     .caption-output.show { display: block; }
     .caption-box {
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      border-radius: 12px;
-      padding: 16px;
+      background: #2a2724;
+      border: 1px solid #2e2a26;
+      border-radius: 10px;
+      padding: 18px;
+      font-family: 'Inter', system-ui, sans-serif;
       font-size: 14px;
       line-height: 1.7;
+      color: #f2ede6;
       white-space: pre-wrap;
       word-break: break-word;
       margin-bottom: 12px;
@@ -221,35 +326,11 @@
     .caption-actions {
       display: flex;
       gap: 8px;
-    .caption-actions { display: flex; gap: 8px; margin-top: 12px; }
+      margin-top: 12px;
+    }
     .caption-actions .btn { width: auto; flex: 1; }
 
-    /* Link Bio toggle */
-    .linkbio-toggle { margin-bottom: 16px; padding: 12px 14px; background: #1a1a1a; border-radius: 10px; border: 1px solid #2a2a2a; }
-    .toggle-label { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; font-weight: 500; }
-    .toggle-label input[type="checkbox"] { width: 18px; height: 18px; accent-color: #fff; cursor: pointer; }
-    .toggle-hint { display: block; font-size: 11px; color: #555; margin-top: 4px; margin-left: 28px; }
-
-    /* Link Bio list */
-    .linkbio-empty { font-size: 13px; color: #555; text-align: center; padding: 20px; }
-    .linkbio-list { display: flex; flex-direction: column; gap: 8px; }
-    .linkbio-entry {
-      display: flex; align-items: center; gap: 10px;
-      padding: 14px 14px; background: #1a1a1a; border-radius: 10px; border: 1px solid #2a2a2a;
-      font-size: 13px; text-decoration: none; color: #fff; cursor: pointer;
-      transition: all .2s;
-    }
-    .linkbio-entry:hover { background: #1f1f1f; border-color: #444; }
-    .linkbio-entry .entry-num { color: #555; font-size: 11px; min-width: 20px; }
-    .linkbio-entry .entry-name { flex: 1; font-weight: 500; }
-    .linkbio-entry .entry-arrow { color: #555; font-size: 14px; transition: color .2s; }
-    .linkbio-entry:hover .entry-arrow { color: #fff; }
-    .linkbio-entry .entry-del { cursor: pointer; color: #ff4444; font-size: 16px; transition: color .2s; background: none; border: none; padding: 2px 6px; }
-    .linkbio-entry .entry-del:hover { color: #ff6666; }
-    .linkbio-actions { display: flex; gap: 8px; margin-top: 12px; }
-    .linkbio-actions .btn { width: auto; flex: 1; }
-
-    /* Hashtag preview */
+    /* ─── Hashtags ─── */
     .hashtags {
       margin-top: 12px;
       display: flex;
@@ -258,66 +339,175 @@
     }
     .hashtag {
       font-size: 12px;
-      color: #667eea;
+      color: #7c5cfc;
+      opacity: 0.8;
     }
 
-    /* API Settings — hidden, not needed */
+    /* ─── Link Bio Toggle ─── */
+    .linkbio-toggle {
+      margin-bottom: 16px;
+      padding: 14px 16px;
+      background: #2a2724;
+      border-radius: 10px;
+      border: 1px solid #2e2a26;
+    }
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: #f2ede6;
+    }
+    .toggle-label input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #7c5cfc;
+      cursor: pointer;
+    }
+    .toggle-hint {
+      display: block;
+      font-size: 11px;
+      color: #4a443e;
+      margin-top: 4px;
+      margin-left: 28px;
+    }
+
+    /* ─── Link Bio ─── */
+    .linkbio-empty {
+      font-size: 13px;
+      color: #4a443e;
+      text-align: center;
+      padding: 24px;
+    }
+    .linkbio-list { display: flex; flex-direction: column; gap: 8px; }
+    .linkbio-entry {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px;
+      background: #2a2724;
+      border-radius: 10px;
+      border: 1px solid #2e2a26;
+      font-size: 14px;
+      font-family: 'Inter', system-ui, sans-serif;
+      text-decoration: none;
+      color: #f2ede6;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+    .linkbio-entry:hover {
+      background: #34302c;
+      border-color: #3d3833;
+    }
+    .linkbio-entry .entry-num {
+      color: #4a443e;
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      min-width: 20px;
+    }
+    .linkbio-entry .entry-name { flex: 1; font-weight: 500; }
+    .linkbio-entry .entry-arrow {
+      color: #4a443e;
+      font-size: 14px;
+      transition: color .2s;
+    }
+    .linkbio-entry:hover .entry-arrow { color: #7c5cfc; }
+    .linkbio-entry .entry-del {
+      cursor: pointer;
+      color: #ff4444;
+      font-size: 16px;
+      transition: color .2s;
+      background: none;
+      border: none;
+      padding: 2px 6px;
+      opacity: 0.6;
+    }
+    .linkbio-entry .entry-del:hover { opacity: 1; }
+    .linkbio-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .linkbio-actions .btn { width: auto; flex: 1; }
+
+    /* ─── Manual fallback divider ─── */
+    .manual-divider {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #252220;
+    }
+    .manual-hint {
+      font-size: 11px;
+      color: #4a443e;
+      margin-top: 4px;
+    }
+
+    /* ─── Image Preview ─── */
+    .image-preview-area {
+      display: none;
+      margin-top: 8px;
+      text-align: center;
+    }
+    .image-preview-area.show { display: block; }
+    .image-preview-area img {
+      max-width: 200px;
+      border-radius: 12px;
+      border: 1px solid #2e2a26;
+    }
+
+    /* ─── API Settings ─── */
     .api-settings { display: none; }
 
-    /* Loading */
-    .spinner {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid #333;
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.6s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* Loading overlay */
+    /* ─── Loading Overlay ─── */
     .loading-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.7);
+      background: rgba(22, 20, 18, 0.85);
+      backdrop-filter: blur(4px);
       z-index: 200;
       align-items: center;
       justify-content: center;
     }
     .loading-overlay.show { display: flex; }
     .loading-card {
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 16px;
-      padding: 32px 40px;
+      background: #1e1c1a;
+      border: 1px solid #2e2a26;
+      border-radius: 14px;
+      padding: 36px 44px;
       text-align: center;
       min-width: 280px;
     }
     .loading-card .spinner {
+      display: inline-block;
       width: 32px;
       height: 32px;
-      border-width: 3px;
-      border-color: #333;
-      border-top-color: #4ade80;
+      border: 3px solid #2e2a26;
+      border-top-color: #7c5cfc;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
     }
+    @keyframes spin { to { transform: rotate(360deg); } }
     .loading-card .status-text {
       margin-top: 16px;
       font-size: 14px;
-      color: #aaa;
+      color: #a89f94;
+      font-family: 'Inter', system-ui, sans-serif;
     }
     .loading-card .progress-track {
       margin-top: 16px;
       height: 4px;
-      background: #222;
+      background: #2a2724;
       border-radius: 2px;
       overflow: hidden;
     }
     .loading-card .progress-bar {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #4ade80, #22d3ee);
+      background: linear-gradient(90deg, #7c5cfc, #4ade80);
       border-radius: 2px;
       animation: progressAnim 2s ease-in-out infinite;
     }
@@ -326,36 +516,42 @@
       50% { width: 60%; margin-left: 0; }
       100% { width: 0%; margin-left: 100%; }
     }
+
+    /* ─── Toast ─── */
     .toast {
       position: fixed;
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%);
-      background: #1a1a1a;
-      border: 1px solid #333;
+      background: #2a2724;
+      border: 1px solid #3d3833;
       padding: 10px 20px;
-      border-radius: 10px;
+      border-radius: 9999px;
+      font-family: 'Inter', system-ui, sans-serif;
       font-size: 13px;
       color: #4ade80;
       opacity: 0;
-      transition: opacity 0.3s;
+      transition: opacity .3s ease;
       pointer-events: none;
       z-index: 100;
     }
     .toast.show { opacity: 1; }
 
-    /* Footer */
+    /* ─── Footer ─── */
     .footer {
-      margin-top: 32px;
+      margin-top: 40px;
       font-size: 12px;
-      color: #444;
+      color: #3d3833;
       text-align: center;
+      font-family: 'Inter', system-ui, sans-serif;
     }
 
+    /* ─── Responsive ─── */
     @media (max-width: 400px) {
       body { padding: 24px 16px; }
       .card { padding: 18px; }
       .tone-row { flex-direction: column; }
+      .caption-actions { flex-direction: column; }
     }
   </style>
 </head>
@@ -371,16 +567,17 @@
 
   <div class="container">
     <!-- Header -->
-  <div class="header">
-    <h1>🧰 Affiliate Tools</h1>
-    <p>Caption generator + lainnya</p>
-    <div class="tools-nav">
-      <a href="/" class="active">✍️ Caption</a>
+    <div class="header">
+      <h1>🧰 Affiliate <span class="accent">Tools</span></h1>
+      <p class="sub">Caption generator + link bio manager</p>
+      <div class="tools-nav">
+        <a href="/" class="active">✍️ Caption</a>
+        <a href="/linkbio.html">🔗 Link Bio</a>
+      </div>
     </div>
-  </div>
 
     <!-- Step 1: Link -->
-    <div class="card">
+    <div class="card card-purple">
       <div class="card-title">🔗 1. Link Afiliasi</div>
       <div class="input-group">
         <label for="affLink">Link Shopee / Tokopedia / dll</label>
@@ -390,13 +587,17 @@
 
       <!-- Product Preview -->
       <div class="product-preview" id="productPreview">
-        <img class="prod-img" id="prodImg" src="" alt="" />
-        <div class="prod-name" id="prodName">-</div>
-        <div class="prod-price" id="prodPrice">-</div>
+        <div class="prod-row">
+          <img class="prod-img" id="prodImg" src="" alt="" />
+          <div class="prod-info">
+            <div class="prod-name" id="prodName">-</div>
+            <div class="prod-price" id="prodPrice"></div>
+          </div>
+        </div>
       </div>
 
-      <!-- Manual fallback (auto-filled by scrape) -->
-      <div style="margin-top:16px;padding-top:16px;border-top:1px solid #222;">
+      <!-- Manual fallback -->
+      <div class="manual-divider">
         <div class="input-group">
           <label for="manualName">Nama produk (manual fallback)</label>
           <input type="text" id="manualName" placeholder="Isi manual jika scrape gagal" />
@@ -405,33 +606,31 @@
           <label for="manualPrice">Harga (opsional)</label>
           <input type="text" id="manualPrice" placeholder="Rp 25.000" />
         </div>
-        <p style="font-size:11px;color:#555;margin-top:4px;">
-          Biarkan kosong — scrape otomatis dari link di atas.
-        </p>
+        <p class="manual-hint">Biarkan kosong — scrape otomatis dari link di atas.</p>
       </div>
     </div>
 
-    <!-- Image URL (manual dari user) -->
+    <!-- Image URL -->
     <div class="card">
       <div class="card-title">🖼️ Gambar Produk</div>
       <div class="input-group">
         <label for="imageUrl">Link gambar (dari Shopee CDN / manual)</label>
         <input type="url" id="imageUrl" placeholder="https://down-id.img.susercontent.com/..." />
       </div>
-      <div id="imagePreview" style="display:none;margin-top:8px;text-align:center;">
-        <img id="previewImg" src="" style="max-width:200px;border-radius:12px;border:1px solid #2a2a2a;" />
+      <div class="image-preview-area" id="imagePreview">
+        <img id="previewImg" src="" />
       </div>
     </div>
 
     <!-- Step 2: Style -->
-    <div class="card" id="styleCard">
+    <div class="card card-green" id="styleCard">
       <div class="card-title">🎨 2. Gaya Caption</div>
       <div class="style-tags" id="styleTags">
         <span class="style-tag active" data-style="review">📝 Review</span>
         <span class="style-tag" data-style="rekomendasi">⭐ Rekomendasi</span>
         <span class="style-tag" data-style="unboxing">📦 Unboxing</span>
         <span class="style-tag" data-style="tips">💡 Tips</span>
-        <span class="style-tag" data-style="skincare-routine">🧴 Skincare Routine</span>
+        <span class="style-tag" data-style="skincare-routine">🧴 Skincare</span>
         <span class="style-tag" data-style="hemat">💰 Hemat</span>
       </div>
       <div class="card-title" style="margin-top:4px;">🎙️ Tone</div>
@@ -473,7 +672,7 @@
       <div class="linkbio-list" id="linkbioList"></div>
       <div class="linkbio-actions" id="linkbioActions" style="display:none;">
         <button class="btn btn-secondary btn-sm" id="copyAllLinks">📋 Salin Semua Link</button>
-        <button class="btn btn-secondary btn-sm" id="clearLinks" style="color:#ff4444;">🗑️ Hapus Semua</button>
+        <button class="btn btn-danger btn-sm" id="clearLinks">🗑️ Hapus Semua</button>
       </div>
     </div>
 
@@ -566,7 +765,6 @@
       saveLinkBio(entries);
       renderLinkBio();
     }
-    // Init render
     renderLinkBio();
 
     // ─── Helpers ───
@@ -589,10 +787,10 @@
     imageUrl.addEventListener('input', () => {
       const url = imageUrl.value.trim();
       if (url) {
-        imagePreview.style.display = 'block';
+        imagePreview.classList.add('show');
         previewImg.src = url;
       } else {
-        imagePreview.style.display = 'none';
+        imagePreview.classList.remove('show');
       }
     });
 
@@ -616,7 +814,6 @@
     fetchBtn.addEventListener('click', async () => {
       const link = affLink.value.trim();
       if (!link) {
-        // Use manual fields
         if (manualName.value.trim()) {
           productData = {
             name: manualName.value.trim(),
@@ -642,7 +839,7 @@
           body: JSON.stringify({ url: link })
         });
         statusText.textContent = 'Memproses hasil...';
-        await new Promise(r => setTimeout(r, 300)); // brief pause so progress bar animates
+        await new Promise(r => setTimeout(r, 300));
         const data = await res.json();
         const name = data.name && data.name !== '-' ? data.name : (manualName.value.trim() || '-');
         const price = data.price && data.price !== '-' ? data.price : (manualPrice.value.trim() || '-');
@@ -676,7 +873,7 @@
       prodPrice.textContent = data.price !== '-' ? '💰 ' + data.price : '';
     }
 
-    // ─── Generate Caption (via API) ───
+    // ─── Generate Caption ───
     async function generateCaption() {
       const style = getActive(styleTags, '[data-style]') || 'review';
       const tone = getActive(toneRow, '[data-tone]') || 'casual';
@@ -716,7 +913,6 @@
         }
 
         const data = await res.json();
-        // Show image if available
         let displayText = data.caption + '\n\n' + data.hashtags;
         if (data.imageUrl) {
           displayText = data.imageUrl + '\n\n' + displayText;
@@ -724,14 +920,12 @@
         captionBox.textContent = displayText;
         hashtags.innerHTML = data.hashtags.split(' ').map(t => `<span class="hashtag">${t}</span>`).join('');
 
-        // Also show image preview in output
         if (data.imageUrl) {
           imageUrl.value = data.imageUrl;
-          imagePreview.style.display = 'block';
+          imagePreview.classList.add('show');
           previewImg.src = data.imageUrl;
         }
 
-        // Auto-save to Link Bio
         if (linkbioCheck.checked && link) {
           addLinkBio(name, link);
           showToast('✓ Ditambahkan ke Link Bio');
@@ -758,7 +952,6 @@
       navigator.clipboard.writeText(text).then(() => {
         showToast('✓ Caption tersalin!');
       }).catch(() => {
-        // Fallback
         const ta = document.createElement('textarea');
         ta.value = text;
         document.body.appendChild(ta);
@@ -769,14 +962,7 @@
       });
     });
 
-    // ─── Auto-fill manual from link ───
-    affLink.addEventListener('input', () => {
-      if (affLink.value.trim()) {
-        // Disable if we have an API endpoint?
-      }
-    });
-
-    // ─── Link Bio event delegation ───
+    // ─── Link Bio events ───
     linkbioList.addEventListener('click', e => {
       const delBtn = e.target.closest('.entry-del');
       if (delBtn) {
