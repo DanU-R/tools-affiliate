@@ -586,8 +586,8 @@
 
     // ─── Generate Caption (via API) ───
     async function generateCaption() {
-      const style = getActive(styleTags, '.style-tag') || 'review';
-      const tone = getActive(toneRow, '.tone-btn') || 'casual';
+      const style = getActive(styleTags, '[data-style]') || 'review';
+      const tone = getActive(toneRow, '[data-tone]') || 'casual';
       const notes = extraNotes.value.trim();
 
       const name = productData.name || manualName.value.trim() || 'produk ini';
