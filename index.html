@@ -504,12 +504,6 @@
       }
     });
 
-    // ─── Toggle API settings ───
-    apiToggle.addEventListener('click', () => {
-      apiBody.classList.toggle('show');
-      apiToggle.textContent = apiBody.classList.contains('show') ? '⚙️ Tutup API Settings' : '⚙️ Atur API Endpoint';
-    });
-
     // ─── Style / Tone click ───
     styleTags.addEventListener('click', e => {
       const tag = e.target.closest('.style-tag');
