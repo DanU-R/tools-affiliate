@@ -221,8 +221,32 @@
     .caption-actions {
       display: flex;
       gap: 8px;
+    .caption-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .caption-actions .btn { width: auto; flex: 1; }
+
+    /* Link Bio toggle */
+    .linkbio-toggle { margin-bottom: 16px; padding: 12px 14px; background: #1a1a1a; border-radius: 10px; border: 1px solid #2a2a2a; }
+    .toggle-label { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; font-weight: 500; }
+    .toggle-label input[type="checkbox"] { width: 18px; height: 18px; accent-color: #fff; cursor: pointer; }
+    .toggle-hint { display: block; font-size: 11px; color: #555; margin-top: 4px; margin-left: 28px; }
+
+    /* Link Bio list */
+    .linkbio-empty { font-size: 13px; color: #555; text-align: center; padding: 20px; }
+    .linkbio-list { display: flex; flex-direction: column; gap: 8px; }
+    .linkbio-entry {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 14px; background: #1a1a1a; border-radius: 10px; border: 1px solid #2a2a2a;
+      font-size: 13px;
     }
-    .caption-actions .btn { flex: 1; }
+    .linkbio-entry .entry-num { color: #555; font-size: 11px; min-width: 20px; }
+    .linkbio-entry .entry-name { flex: 1; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .linkbio-entry .entry-link { color: #888; font-size: 11px; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .linkbio-entry .entry-copy { cursor: pointer; color: #888; font-size: 16px; transition: color .2s; background: none; border: none; padding: 2px 6px; }
+    .linkbio-entry .entry-copy:hover { color: #fff; }
+    .linkbio-entry .entry-del { cursor: pointer; color: #ff4444; font-size: 16px; transition: color .2s; background: none; border: none; padding: 2px 6px; }
+    .linkbio-entry .entry-del:hover { color: #ff6666; }
+    .linkbio-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .linkbio-actions .btn { width: auto; flex: 1; }
 
     /* Hashtag preview */
     .hashtags {
@@ -420,6 +444,13 @@
         <label for="extraNotes">Tambahan (opsional)</label>
         <textarea id="extraNotes" placeholder="Misal: cocok untuk kulit berminyak, aroma segar..."></textarea>
       </div>
+      <div class="linkbio-toggle">
+        <label class="toggle-label">
+          <input type="checkbox" id="linkbioCheck" checked />
+          <span>📋 Tambahkan ke Link Bio</span>
+        </label>
+        <span class="toggle-hint">Simpan otomatis nama + link ke list Link Bio</span>
+      </div>
       <button class="btn btn-primary" id="generateBtn">✨ Generate Caption</button>
     </div>
 
@@ -431,6 +462,17 @@
       <div class="caption-actions">
         <button class="btn btn-secondary btn-sm" id="copyBtn">📋 Salin</button>
         <button class="btn btn-secondary btn-sm" id="regenerateBtn">🔄 Regenerate</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Link Bio -->
+    <div class="card" id="linkbioCard">
+      <div class="card-title">📋 4. Link Bio</div>
+      <div class="linkbio-empty" id="linkbioEmpty">Belum ada link. Generate caption dengan checklist aktif.</div>
+      <div class="linkbio-list" id="linkbioList"></div>
+      <div class="linkbio-actions" id="linkbioActions" style="display:none;">
+        <button class="btn btn-secondary btn-sm" id="copyAllLinks">📋 Salin Semua Link</button>
+        <button class="btn btn-secondary btn-sm" id="clearLinks" style="color:#ff4444;">🗑️ Hapus Semua</button>
       </div>
     </div>
 
@@ -470,12 +512,62 @@
     const copyBtn = document.getElementById('copyBtn');
     const regenerateBtn = document.getElementById('regenerateBtn');
     const toast = document.getElementById('toast');
+    const linkbioCheck = document.getElementById('linkbioCheck');
+    const linkbioList = document.getElementById('linkbioList');
+    const linkbioEmpty = document.getElementById('linkbioEmpty');
+    const linkbioActions = document.getElementById('linkbioActions');
+    const copyAllLinks = document.getElementById('copyAllLinks');
+    const clearLinks = document.getElementById('clearLinks');
 
     // ─── Init ───
     const savedStyle = localStorage.getItem(STYLE_KEY);
     const savedTone = localStorage.getItem(TONE_KEY);
     if (savedStyle) setActive(styleTags, '[data-style]', savedStyle);
     if (savedTone) setActive(toneRow, '[data-tone]', savedTone);
+
+    // ─── Link Bio State ───
+    const LB_KEY = 'affiliate_linkbio';
+    function loadLinkBio() {
+      try { return JSON.parse(localStorage.getItem(LB_KEY)) || []; }
+      catch { return []; }
+    }
+    function saveLinkBio(entries) {
+      localStorage.setItem(LB_KEY, JSON.stringify(entries));
+    }
+    function renderLinkBio() {
+      const entries = loadLinkBio();
+      if (entries.length === 0) {
+        linkbioList.innerHTML = '';
+        linkbioEmpty.style.display = 'block';
+        linkbioActions.style.display = 'none';
+        return;
+      }
+      linkbioEmpty.style.display = 'none';
+      linkbioActions.style.display = 'flex';
+      linkbioList.innerHTML = entries.map((e, i) => `
+        <div class="linkbio-entry" data-idx="${i}">
+          <span class="entry-num">${i + 1}.</span>
+          <span class="entry-name" title="${e.name}">${e.name}</span>
+          <span class="entry-link" title="${e.link}">${e.link}</span>
+          <button class="entry-copy" data-link="${e.link}" title="Salin link">📋</button>
+          <button class="entry-del" data-idx="${i}" title="Hapus">✕</button>
+        </div>
+      `).join('');
+    }
+    function addLinkBio(name, link) {
+      const entries = loadLinkBio();
+      entries.push({ name, link, addedAt: new Date().toISOString() });
+      saveLinkBio(entries);
+      renderLinkBio();
+    }
+    function removeLinkBio(idx) {
+      const entries = loadLinkBio();
+      entries.splice(idx, 1);
+      saveLinkBio(entries);
+      renderLinkBio();
+    }
+    // Init render
+    renderLinkBio();
 
     // ─── Helpers ───
     function setActive(parent, selector, value) {
@@ -638,6 +730,12 @@
           imagePreview.style.display = 'block';
           previewImg.src = data.imageUrl;
         }
+
+        // Auto-save to Link Bio
+        if (linkbioCheck.checked && link) {
+          addLinkBio(name, link);
+          showToast('✓ Ditambahkan ke Link Bio');
+        }
       } catch (e) {
         captionBox.textContent = '⚠️ Gagal generate: ' + e.message + '\n\nCoba lagi nanti.';
         hashtags.innerHTML = '';
@@ -675,6 +773,34 @@
     affLink.addEventListener('input', () => {
       if (affLink.value.trim()) {
         // Disable if we have an API endpoint?
+      }
+    });
+
+    // ─── Link Bio event delegation ───
+    linkbioList.addEventListener('click', e => {
+      const copyBtn = e.target.closest('.entry-copy');
+      const delBtn = e.target.closest('.entry-del');
+      if (copyBtn) {
+        const link = copyBtn.dataset.link;
+        navigator.clipboard.writeText(link).then(() => showToast('✓ Link tersalin!'));
+        return;
+      }
+      if (delBtn) {
+        const idx = parseInt(delBtn.dataset.idx);
+        removeLinkBio(idx);
+        showToast('✕ Dihapus');
+      }
+    });
+    copyAllLinks.addEventListener('click', () => {
+      const entries = loadLinkBio();
+      const text = entries.map((e, i) => `${i+1}. ${e.name} — ${e.link}`).join('\n');
+      navigator.clipboard.writeText(text).then(() => showToast(`✓ ${entries.length} link tersalin!`));
+    });
+    clearLinks.addEventListener('click', () => {
+      if (confirm('Hapus semua link bio?')) {
+        saveLinkBio([]);
+        renderLinkBio();
+        showToast('🗑️ Semua link dihapus');
       }
     });
   </script>
