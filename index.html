@@ -235,14 +235,15 @@
     .linkbio-list { display: flex; flex-direction: column; gap: 8px; }
     .linkbio-entry {
       display: flex; align-items: center; gap: 10px;
-      padding: 12px 14px; background: #1a1a1a; border-radius: 10px; border: 1px solid #2a2a2a;
-      font-size: 13px;
+      padding: 14px 14px; background: #1a1a1a; border-radius: 10px; border: 1px solid #2a2a2a;
+      font-size: 13px; text-decoration: none; color: #fff; cursor: pointer;
+      transition: all .2s;
     }
+    .linkbio-entry:hover { background: #1f1f1f; border-color: #444; }
     .linkbio-entry .entry-num { color: #555; font-size: 11px; min-width: 20px; }
-    .linkbio-entry .entry-name { flex: 1; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .linkbio-entry .entry-link { color: #888; font-size: 11px; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .linkbio-entry .entry-copy { cursor: pointer; color: #888; font-size: 16px; transition: color .2s; background: none; border: none; padding: 2px 6px; }
-    .linkbio-entry .entry-copy:hover { color: #fff; }
+    .linkbio-entry .entry-name { flex: 1; font-weight: 500; }
+    .linkbio-entry .entry-arrow { color: #555; font-size: 14px; transition: color .2s; }
+    .linkbio-entry:hover .entry-arrow { color: #fff; }
     .linkbio-entry .entry-del { cursor: pointer; color: #ff4444; font-size: 16px; transition: color .2s; background: none; border: none; padding: 2px 6px; }
     .linkbio-entry .entry-del:hover { color: #ff6666; }
     .linkbio-actions { display: flex; gap: 8px; margin-top: 12px; }
@@ -545,13 +546,12 @@
       linkbioEmpty.style.display = 'none';
       linkbioActions.style.display = 'flex';
       linkbioList.innerHTML = entries.map((e, i) => `
-        <div class="linkbio-entry" data-idx="${i}">
+        <a class="linkbio-entry" href="${e.link}" target="_blank" rel="noopener" data-idx="${i}">
           <span class="entry-num">${i + 1}.</span>
-          <span class="entry-name" title="${e.name}">${e.name}</span>
-          <span class="entry-link" title="${e.link}">${e.link}</span>
-          <button class="entry-copy" data-link="${e.link}" title="Salin link">📋</button>
+          <span class="entry-name">${e.name}</span>
+          <span class="entry-arrow">↗</span>
           <button class="entry-del" data-idx="${i}" title="Hapus">✕</button>
-        </div>
+        </a>
       `).join('');
     }
     function addLinkBio(name, link) {
@@ -778,14 +778,10 @@
 
     // ─── Link Bio event delegation ───
     linkbioList.addEventListener('click', e => {
-      const copyBtn = e.target.closest('.entry-copy');
       const delBtn = e.target.closest('.entry-del');
-      if (copyBtn) {
-        const link = copyBtn.dataset.link;
-        navigator.clipboard.writeText(link).then(() => showToast('✓ Link tersalin!'));
-        return;
-      }
       if (delBtn) {
+        e.preventDefault();
+        e.stopPropagation();
         const idx = parseInt(delBtn.dataset.idx);
         removeLinkBio(idx);
         showToast('✕ Dihapus');
