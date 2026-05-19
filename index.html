@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tools • @kavve_ra</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✍️</text></svg>" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    .container { max-width: 560px; width: 100%; }
+
+    /* Header */
+    .header { text-align: center; margin-bottom: 32px; }
+    .header h1 { font-size: 20px; font-weight: 700; }
+    .header p { font-size: 13px; color: #666; margin-top: 4px; }
+    .header .tools-nav { display: flex; gap: 8px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
+    .header .tools-nav a { color: #888; text-decoration: none; font-size: 12px; padding: 6px 14px; border: 1px solid #222; border-radius: 20px; transition: all .2s; }
+    .header .tools-nav a:hover, .header .tools-nav a.active { color: #fff; border-color: #555; background: #1a1a1a; }
+
+    /* Card */
+    .card {
+      background: #141414;
+      border: 1px solid #222;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+
+    /* Input */
+    .input-group { margin-bottom: 16px; }
+    .input-group:last-child { margin-bottom: 0; }
+    .input-group label {
+      display: block;
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .input-group input,
+    .input-group textarea,
+    .input-group select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.2s;
+      font-family: inherit;
+    }
+    .input-group input:focus,
+    .input-group textarea:focus,
+    .input-group select:focus {
+      border-color: #555;
+    }
+    .input-group input::placeholder,
+    .input-group textarea::placeholder { color: #444; }
+    .input-group textarea { resize: vertical; min-height: 80px; }
+    .input-group select option { background: #1a1a1a; color: #fff; }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: #fff;
+      color: #0f0f0f;
+    }
+    .btn-primary:hover { background: #e0e0e0; }
+    .btn-primary:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .btn-secondary {
+      background: #1a1a1a;
+      color: #fff;
+      border: 1px solid #2a2a2a;
+    }
+    .btn-secondary:hover { background: #242424; }
+    .btn-sm {
+      padding: 8px 14px;
+      font-size: 12px;
+      width: auto;
+    }
+
+    /* Product Preview */
+    .product-preview {
+      display: none;
+      margin-top: 16px;
+      padding: 16px;
+      background: #1a1a1a;
+      border-radius: 12px;
+      border: 1px solid #2a2a2a;
+    }
+    .product-preview.show { display: block; }
+    .product-preview .prod-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+      background: #222;
+      object-fit: cover;
+      float: left;
+      margin-right: 14px;
+    }
+    .product-preview .prod-name {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .product-preview .prod-price {
+      font-size: 14px;
+      color: #4ade80;
+      font-weight: 600;
+    }
+    .product-preview::after {
+      content: '';
+      display: table;
+      clear: both;
+    }
+
+    /* Caption Style Tags */
+    .style-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .style-tag {
+      padding: 8px 14px;
+      border-radius: 20px;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      font-size: 12px;
+      color: #aaa;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .style-tag:hover { border-color: #444; }
+    .style-tag.active {
+      background: #fff;
+      color: #0f0f0f;
+      border-color: #fff;
+    }
+
+    /* Tone Toggle */
+    .tone-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .tone-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      color: #aaa;
+      font-size: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tone-btn:hover { border-color: #444; }
+    .tone-btn.active {
+      background: #fff;
+      color: #0f0f0f;
+      border-color: #fff;
+    }
+
+    /* Caption Output */
+    .caption-output {
+      display: none;
+      margin-top: 16px;
+    }
+    .caption-output.show { display: block; }
+    .caption-box {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 14px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin-bottom: 12px;
+      min-height: 100px;
+    }
+    .caption-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .caption-actions .btn { flex: 1; }
+
+    /* Hashtag preview */
+    .hashtags {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .hashtag {
+      font-size: 12px;
+      color: #667eea;
+    }
+
+    /* API Settings — hidden, not needed */
+    .api-settings { display: none; }
+
+    /* Loading */
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #333;
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Loading overlay */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .loading-overlay.show { display: flex; }
+    .loading-card {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 16px;
+      padding: 32px 40px;
+      text-align: center;
+      min-width: 280px;
+    }
+    .loading-card .spinner {
+      width: 32px;
+      height: 32px;
+      border-width: 3px;
+      border-color: #333;
+      border-top-color: #4ade80;
+    }
+    .loading-card .status-text {
+      margin-top: 16px;
+      font-size: 14px;
+      color: #aaa;
+    }
+    .loading-card .progress-track {
+      margin-top: 16px;
+      height: 4px;
+      background: #222;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .loading-card .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #4ade80, #22d3ee);
+      border-radius: 2px;
+      animation: progressAnim 2s ease-in-out infinite;
+    }
+    @keyframes progressAnim {
+      0% { width: 0%; margin-left: 0; }
+      50% { width: 60%; margin-left: 0; }
+      100% { width: 0%; margin-left: 100%; }
+    }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1a1a1a;
+      border: 1px solid #333;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      color: #4ade80;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .toast.show { opacity: 1; }
+
+    /* Footer */
+    .footer {
+      margin-top: 32px;
+      font-size: 12px;
+      color: #444;
+      text-align: center;
+    }
+
+    @media (max-width: 400px) {
+      body { padding: 24px 16px; }
+      .card { padding: 18px; }
+      .tone-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-card">
+      <div class="spinner"></div>
+      <div class="status-text" id="statusText">Mengambil data produk...</div>
+      <div class="progress-track"><div class="progress-bar"></div></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Header -->
+  <div class="header">
+    <h1>🧰 Affiliate Tools</h1>
+    <p>Caption generator + lainnya</p>
+    <div class="tools-nav">
+      <a href="/" class="active">✍️ Caption</a>
+    </div>
+  </div>
+
+    <!-- Step 1: Link -->
+    <div class="card">
+      <div class="card-title">🔗 1. Link Afiliasi</div>
+      <div class="input-group">
+        <label for="affLink">Link Shopee / Tokopedia / dll</label>
+        <input type="url" id="affLink" placeholder="https://s.shopee.co.id/..." />
+      </div>
+      <button class="btn btn-primary" id="fetchBtn">🔍 Ambil Data Produk</button>
+
+      <!-- Product Preview -->
+      <div class="product-preview" id="productPreview">
+        <img class="prod-img" id="prodImg" src="" alt="" />
+        <div class="prod-name" id="prodName">-</div>
+        <div class="prod-price" id="prodPrice">-</div>
+      </div>
+
+      <!-- Manual fallback (auto-filled by scrape) -->
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid #222;">
+        <div class="input-group">
+          <label for="manualName">Nama produk (manual fallback)</label>
+          <input type="text" id="manualName" placeholder="Isi manual jika scrape gagal" />
+        </div>
+        <div class="input-group">
+          <label for="manualPrice">Harga (opsional)</label>
+          <input type="text" id="manualPrice" placeholder="Rp 25.000" />
+        </div>
+        <p style="font-size:11px;color:#555;margin-top:4px;">
+          Biarkan kosong — scrape otomatis dari link di atas.
+        </p>
+      </div>
+    </div>
+
+    <!-- Image URL (manual dari user) -->
+    <div class="card">
+      <div class="card-title">🖼️ Gambar Produk</div>
+      <div class="input-group">
+        <label for="imageUrl">Link gambar (dari Shopee CDN / manual)</label>
+        <input type="url" id="imageUrl" placeholder="https://down-id.img.susercontent.com/..." />
+      </div>
+      <div id="imagePreview" style="display:none;margin-top:8px;text-align:center;">
+        <img id="previewImg" src="" style="max-width:200px;border-radius:12px;border:1px solid #2a2a2a;" />
+      </div>
+    </div>
+
+    <!-- Step 2: Style -->
+    <div class="card" id="styleCard">
+      <div class="card-title">🎨 2. Gaya Caption</div>
+      <div class="style-tags" id="styleTags">
+        <span class="style-tag active" data-style="review">📝 Review</span>
+        <span class="style-tag" data-style="rekomendasi">⭐ Rekomendasi</span>
+        <span class="style-tag" data-style="unboxing">📦 Unboxing</span>
+        <span class="style-tag" data-style="tips">💡 Tips</span>
+        <span class="style-tag" data-style="skincare-routine">🧴 Skincare Routine</span>
+        <span class="style-tag" data-style="hemat">💰 Hemat</span>
+      </div>
+      <div class="card-title" style="margin-top:4px;">🎙️ Tone</div>
+      <div class="tone-row" id="toneRow">
+        <span class="tone-btn active" data-tone="casual">Santai</span>
+        <span class="tone-btn" data-tone="funny">Lucu</span>
+        <span class="tone-btn" data-tone="informative">Informatif</span>
+        <span class="tone-btn" data-tone="storytelling">Cerita</span>
+      </div>
+      <div class="input-group">
+        <label for="extraNotes">Tambahan (opsional)</label>
+        <textarea id="extraNotes" placeholder="Misal: cocok untuk kulit berminyak, aroma segar..."></textarea>
+      </div>
+      <button class="btn btn-primary" id="generateBtn">✨ Generate Caption</button>
+    </div>
+
+    <!-- Step 3: Output -->
+    <div class="card caption-output" id="captionOutput">
+      <div class="card-title">📄 3. Caption Siap</div>
+      <div class="caption-box" id="captionBox"></div>
+      <div class="hashtags" id="hashtags"></div>
+      <div class="caption-actions">
+        <button class="btn btn-secondary btn-sm" id="copyBtn">📋 Salin</button>
+        <button class="btn btn-secondary btn-sm" id="regenerateBtn">🔄 Regenerate</button>
+      </div>
+    </div>
+
+    <div class="footer">© 2026 @kavve_ra • caption tool</div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">✓ Tersalin!</div>
+
+  <script>
+    // ─── State ───
+    let productData = {};
+    const STYLE_KEY = 'captool_style';
+    const TONE_KEY = 'captool_tone';
+
+    // ─── DOM refs ───
+    const affLink = document.getElementById('affLink');
+    const fetchBtn = document.getElementById('fetchBtn');
+    const prodPreview = document.getElementById('productPreview');
+    const prodImg = document.getElementById('prodImg');
+    const prodName = document.getElementById('prodName');
+    const prodPrice = document.getElementById('prodPrice');
+    const manualName = document.getElementById('manualName');
+    const manualPrice = document.getElementById('manualPrice');
+    const imageUrl = document.getElementById('imageUrl');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewImg = document.getElementById('previewImg');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const statusText = document.getElementById('statusText');
+    const styleTags = document.getElementById('styleTags');
+    const toneRow = document.getElementById('toneRow');
+    const extraNotes = document.getElementById('extraNotes');
+    const generateBtn = document.getElementById('generateBtn');
+    const captionOutput = document.getElementById('captionOutput');
+    const captionBox = document.getElementById('captionBox');
+    const hashtags = document.getElementById('hashtags');
+    const copyBtn = document.getElementById('copyBtn');
+    const regenerateBtn = document.getElementById('regenerateBtn');
+    const toast = document.getElementById('toast');
+
+    // ─── Init ───
+    const savedStyle = localStorage.getItem(STYLE_KEY);
+    const savedTone = localStorage.getItem(TONE_KEY);
+    if (savedStyle) setActive(styleTags, '[data-style]', savedStyle);
+    if (savedTone) setActive(toneRow, '[data-tone]', savedTone);
+
+    // ─── Helpers ───
+    function setActive(parent, selector, value) {
+      parent.querySelectorAll(selector).forEach(el => {
+        el.classList.toggle('active', el.dataset[selector.match(/data-(\w+)/)[1]] === value);
+      });
+    }
+    function getActive(parent, selector) {
+      const el = parent.querySelector(selector + '.active');
+      return el ? el.dataset[selector.match(/data-(\w+)/)[1]] : null;
+    }
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    // ─── Image URL preview ───
+    imageUrl.addEventListener('input', () => {
+      const url = imageUrl.value.trim();
+      if (url) {
+        imagePreview.style.display = 'block';
+        previewImg.src = url;
+      } else {
+        imagePreview.style.display = 'none';
+      }
+    });
+
+    // ─── Toggle API settings ───
+    apiToggle.addEventListener('click', () => {
+      apiBody.classList.toggle('show');
+      apiToggle.textContent = apiBody.classList.contains('show') ? '⚙️ Tutup API Settings' : '⚙️ Atur API Endpoint';
+    });
+
+    // ─── Style / Tone click ───
+    styleTags.addEventListener('click', e => {
+      const tag = e.target.closest('.style-tag');
+      if (!tag) return;
+      styleTags.querySelectorAll('.style-tag').forEach(t => t.classList.remove('active'));
+      tag.classList.add('active');
+      localStorage.setItem(STYLE_KEY, tag.dataset.style);
+    });
+    toneRow.addEventListener('click', e => {
+      const btn = e.target.closest('.tone-btn');
+      if (!btn) return;
+      toneRow.querySelectorAll('.tone-btn').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      localStorage.setItem(TONE_KEY, btn.dataset.tone);
+    });
+
+    // ─── Fetch Product via /api/scrape ───
+    fetchBtn.addEventListener('click', async () => {
+      const link = affLink.value.trim();
+      if (!link) {
+        // Use manual fields
+        if (manualName.value.trim()) {
+          productData = {
+            name: manualName.value.trim(),
+            price: manualPrice.value.trim() || '-',
+            image: '',
+            link: ''
+          };
+          showProductPreview(productData);
+        } else {
+          showToast('⚠️ Masukkan link afiliasi atau nama produk');
+        }
+        return;
+      }
+
+      fetchBtn.disabled = true;
+      fetchBtn.textContent = '⏳ Mengambil data...';
+      setTimeout(() => { loadingOverlay.classList.add('show'); }, 50);
+      statusText.textContent = 'Mengambil data dari link...';
+      try {
+        const res = await fetch('/api/scrape', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: link })
+        });
+        statusText.textContent = 'Memproses hasil...';
+        await new Promise(r => setTimeout(r, 300)); // brief pause so progress bar animates
+        const data = await res.json();
+        const name = data.name && data.name !== '-' ? data.name : (manualName.value.trim() || '-');
+        const price = data.price && data.price !== '-' ? data.price : (manualPrice.value.trim() || '-');
+        productData = { name, price, image: data.image || '', link };
+        showProductPreview(productData);
+        if (data.name && data.name !== '-') manualName.value = data.name;
+        if (data.price && data.price !== '-') manualPrice.value = data.price;
+        if (data.name === '-') showToast('⚠️ ' + (data._note || 'Scrape gagal, isi manual'));
+      } catch (e) {
+        showToast('⚠️ Gagal scrape: ' + e.message);
+        if (manualName.value.trim()) {
+          productData = { name: manualName.value.trim(), price: manualPrice.value.trim() || '-', image: '', link };
+          showProductPreview(productData);
+        }
+      } finally {
+        fetchBtn.disabled = false;
+        fetchBtn.textContent = '🔍 Ambil Data Produk';
+        loadingOverlay.classList.remove('show');
+      }
+    });
+
+    function showProductPreview(data) {
+      prodPreview.classList.add('show');
+      if (data.image) {
+        prodImg.src = data.image;
+        prodImg.style.display = 'block';
+      } else {
+        prodImg.style.display = 'none';
+      }
+      prodName.textContent = data.name;
+      prodPrice.textContent = data.price !== '-' ? '💰 ' + data.price : '';
+    }
+
+    // ─── Generate Caption (via API) ───
+    async function generateCaption() {
+      const style = getActive(styleTags, '.style-tag') || 'review';
+      const tone = getActive(toneRow, '.tone-btn') || 'casual';
+      const notes = extraNotes.value.trim();
+
+      const name = productData.name || manualName.value.trim() || 'produk ini';
+      const price = productData.price || manualPrice.value.trim() || 'Rp___';
+      const link = productData.link || affLink.value.trim() || '';
+      const img = imageUrl.value.trim() || productData.image || '';
+
+      generateBtn.disabled = true;
+      generateBtn.textContent = '⏳ Membuat caption...';
+      setTimeout(() => { loadingOverlay.classList.add('show'); }, 50);
+      statusText.textContent = 'Membuat caption...';
+
+      try {
+        const res = await fetch('/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            productName: name,
+            productPrice: price,
+            style: style,
+            tone: tone,
+            extraNotes: notes,
+            link: link,
+            imageUrl: img
+          })
+        });
+
+        statusText.textContent = 'Merapikan hasil...';
+        await new Promise(r => setTimeout(r, 200));
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || `HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+        // Show image if available
+        let displayText = data.caption + '\n\n' + data.hashtags;
+        if (data.imageUrl) {
+          displayText = data.imageUrl + '\n\n' + displayText;
+        }
+        captionBox.textContent = displayText;
+        hashtags.innerHTML = data.hashtags.split(' ').map(t => `<span class="hashtag">${t}</span>`).join('');
+
+        // Also show image preview in output
+        if (data.imageUrl) {
+          imageUrl.value = data.imageUrl;
+          imagePreview.style.display = 'block';
+          previewImg.src = data.imageUrl;
+        }
+      } catch (e) {
+        captionBox.textContent = '⚠️ Gagal generate: ' + e.message + '\n\nCoba lagi nanti.';
+        hashtags.innerHTML = '';
+      } finally {
+        generateBtn.disabled = false;
+        generateBtn.textContent = '✨ Generate Caption';
+        loadingOverlay.classList.remove('show');
+      }
+
+      captionOutput.classList.add('show');
+      captionOutput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    generateBtn.addEventListener('click', generateCaption);
+    regenerateBtn.addEventListener('click', generateCaption);
+
+    // ─── Copy ───
+    copyBtn.addEventListener('click', () => {
+      const text = captionBox.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('✓ Caption tersalin!');
+      }).catch(() => {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        showToast('✓ Caption tersalin!');
+      });
+    });
+
+    // ─── Auto-fill manual from link ───
+    affLink.addEventListener('input', () => {
+      if (affLink.value.trim()) {
+        // Disable if we have an API endpoint?
+      }
+    });
+  </script>
+</body>
+</html>
