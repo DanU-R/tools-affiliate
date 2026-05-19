@@ -68,7 +68,7 @@ export default async function handler(req, res) {
     if (productPrice && productPrice !== '-') userPrompt += `\nHarga: ${productPrice}`;
     if (extraNotes) userPrompt += `\nCatatan tambahan: ${extraNotes}`;
     if (link) userPrompt += `\nLink afiliasi: ${link}`;
-    userPrompt += `\n\n${toneInstruction}\n\nAkhiri dengan "⬇️ ${link ? 'cek link di bio' : 'link di bio'}"`;
+    userPrompt += `\n\n${toneInstruction}\n\nAkhiri dengan link afiliasi: ${link || '⬇️ link di bio'}`;
 
     const response = await fetch(`${CAPTION_API_BASE}/chat/completions`, {
       method: 'POST',
@@ -113,8 +113,13 @@ export default async function handler(req, res) {
     };
     const hashtags = hashtagSets[style] || hashtagSets.review;
 
+    // Fallback: if link in input but not in caption, append
+    const fullCaption = link && !caption.includes(link)
+      ? caption + `\n\n🔗 ${link}`
+      : caption;
+
     res.json({
-      caption: caption,
+      caption: fullCaption,
       hashtags: hashtags,
       imageUrl: imageUrl || '',
       model: CAPTION_MODEL
