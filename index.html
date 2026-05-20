@@ -979,13 +979,114 @@
     // ─── Link Bio + Text Link State ───
     const LB_KEY = 'affiliate_linkbio';
     const TL_KEY = 'affiliate_textlinks';
+    const STORE_META_KEY = 'affiliate_store_meta_v1';
+    const STORE_ENDPOINT = '/api/link-store';
+    let syncTimer = null;
+    let syncInFlight = false;
+    let syncQueued = false;
+
+    function safeParse(raw, fallback) {
+      try {
+        const parsed = JSON.parse(raw);
+        return parsed ?? fallback;
+      } catch {
+        return fallback;
+      }
+    }
+    function isHttpUrl(value) {
+      if (typeof value !== 'string') return false;
+      try {
+        const u = new URL(value.trim());
+        return u.protocol === 'http:' || u.protocol === 'https:';
+      } catch {
+        return false;
+      }
+    }
+    function sanitizeLinkBioEntries(entries) {
+      if (!Array.isArray(entries)) return [];
+      return entries
+        .filter(e => e && typeof e === 'object')
+        .map(e => ({
+          name: typeof e.name === 'string' ? e.name.trim().slice(0, 200) : '',
+          link: typeof e.link === 'string' ? e.link.trim() : '',
+          addedAt: typeof e.addedAt === 'string' && !Number.isNaN(Date.parse(e.addedAt))
+            ? e.addedAt
+            : new Date().toISOString()
+        }))
+        .filter(e => e.name && isHttpUrl(e.link));
+    }
+    function sanitizeTextLinkEntries(entries) {
+      if (!Array.isArray(entries)) return [];
+      return entries
+        .filter(e => e && typeof e === 'object')
+        .map(e => ({
+          label: typeof e.label === 'string' ? e.label.trim().slice(0, 200) : '',
+          url: typeof e.url === 'string' ? e.url.trim() : '',
+          addedAt: typeof e.addedAt === 'string' && !Number.isNaN(Date.parse(e.addedAt))
+            ? e.addedAt
+            : new Date().toISOString()
+        }))
+        .filter(e => e.label && isHttpUrl(e.url));
+    }
+    function setLocalUpdatedAt(value) {
+      const updatedAt = (typeof value === 'string' && !Number.isNaN(Date.parse(value)))
+        ? value
+        : new Date().toISOString();
+      localStorage.setItem(STORE_META_KEY, JSON.stringify({ updatedAt }));
+      return updatedAt;
+    }
+    function getLocalUpdatedAt() {
+      const meta = safeParse(localStorage.getItem(STORE_META_KEY), {});
+      if (typeof meta.updatedAt === 'string' && !Number.isNaN(Date.parse(meta.updatedAt))) {
+        return meta.updatedAt;
+      }
+
+      const ts = [];
+      loadLinkBio().forEach(e => {
+        const t = Date.parse(e.addedAt || '');
+        if (!Number.isNaN(t)) ts.push(t);
+      });
+      loadTextLinks().forEach(e => {
+        const t = Date.parse(e.addedAt || '');
+        if (!Number.isNaN(t)) ts.push(t);
+      });
+
+      if (ts.length) return new Date(Math.max(...ts)).toISOString();
+      return new Date(0).toISOString();
+    }
+    function normalizeStoreState(input) {
+      return {
+        version: 1,
+        updatedAt: (typeof input?.updatedAt === 'string' && !Number.isNaN(Date.parse(input.updatedAt)))
+          ? input.updatedAt
+          : new Date().toISOString(),
+        linkBio: sanitizeLinkBioEntries(input?.linkBio),
+        textLinks: sanitizeTextLinkEntries(input?.textLinks)
+      };
+    }
+    function buildLocalStoreState() {
+      return normalizeStoreState({
+        updatedAt: getLocalUpdatedAt(),
+        linkBio: loadLinkBio(),
+        textLinks: loadTextLinks()
+      });
+    }
+    function applyStoreState(state) {
+      const normalized = normalizeStoreState(state);
+      localStorage.setItem(LB_KEY, JSON.stringify(normalized.linkBio));
+      localStorage.setItem(TL_KEY, JSON.stringify(normalized.textLinks));
+      setLocalUpdatedAt(normalized.updatedAt);
+      return normalized;
+    }
 
     function loadLinkBio() {
-      try { return JSON.parse(localStorage.getItem(LB_KEY)) || []; }
-      catch { return []; }
+      return sanitizeLinkBioEntries(safeParse(localStorage.getItem(LB_KEY), []));
     }
-    function saveLinkBio(entries) {
-      localStorage.setItem(LB_KEY, JSON.stringify(entries));
+    function saveLinkBio(entries, options = {}) {
+      const normalized = sanitizeLinkBioEntries(entries);
+      localStorage.setItem(LB_KEY, JSON.stringify(normalized));
+      setLocalUpdatedAt(options.updatedAt);
+      if (!options.skipRemote) scheduleRemoteSync();
     }
     function renderLinkBio() {
       const entries = loadLinkBio();
@@ -1020,11 +1121,13 @@
     }
 
     function loadTextLinks() {
-      try { return JSON.parse(localStorage.getItem(TL_KEY)) || []; }
-      catch { return []; }
+      return sanitizeTextLinkEntries(safeParse(localStorage.getItem(TL_KEY), []));
     }
-    function saveTextLinks(entries) {
-      localStorage.setItem(TL_KEY, JSON.stringify(entries));
+    function saveTextLinks(entries, options = {}) {
+      const normalized = sanitizeTextLinkEntries(entries);
+      localStorage.setItem(TL_KEY, JSON.stringify(normalized));
+      setLocalUpdatedAt(options.updatedAt);
+      if (!options.skipRemote) scheduleRemoteSync();
     }
     function renderTextLinks() {
       const entries = loadTextLinks();
@@ -1057,8 +1160,78 @@
       renderTextLinks();
     }
 
+    async function pushRemoteState(stateOverride = null, silent = false) {
+      if (syncInFlight) {
+        syncQueued = true;
+        return;
+      }
+      syncInFlight = true;
+      try {
+        const payload = normalizeStoreState(stateOverride || buildLocalStoreState());
+        const resp = await fetch(STORE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const remote = normalizeStoreState(await resp.json());
+        setLocalUpdatedAt(remote.updatedAt);
+      } catch (err) {
+        console.warn('Remote sync failed:', err);
+        if (!silent) showToast('⚠️ Tersimpan lokal. Sinkronisasi cloud gagal');
+      } finally {
+        syncInFlight = false;
+        if (syncQueued) {
+          syncQueued = false;
+          pushRemoteState();
+        }
+      }
+    }
+
+    function scheduleRemoteSync() {
+      if (syncTimer) clearTimeout(syncTimer);
+      syncTimer = setTimeout(() => {
+        pushRemoteState();
+      }, 500);
+    }
+
+    async function syncFromRemoteOnInit() {
+      try {
+        const resp = await fetch(STORE_ENDPOINT, { cache: 'no-store' });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+        const remote = normalizeStoreState(await resp.json());
+        const local = buildLocalStoreState();
+
+        const remoteHasData = remote.linkBio.length > 0 || remote.textLinks.length > 0;
+        const localHasData = local.linkBio.length > 0 || local.textLinks.length > 0;
+
+        const remoteTs = Date.parse(remote.updatedAt || '');
+        const localTs = Date.parse(local.updatedAt || '');
+
+        if (remoteHasData && (!localHasData || (Number.isFinite(remoteTs) && remoteTs > localTs))) {
+          applyStoreState(remote);
+          renderLinkBio();
+          renderTextLinks();
+          return;
+        }
+
+        if (localHasData && (!remoteHasData || (Number.isFinite(localTs) && localTs > remoteTs))) {
+          await pushRemoteState(local, true);
+        }
+      } catch (err) {
+        console.warn('Initial cloud sync skipped:', err);
+      }
+    }
+
+    window.addEventListener('online', () => {
+      pushRemoteState(null, true);
+    });
+
     renderLinkBio();
     renderTextLinks();
+    syncFromRemoteOnInit();
 
     // ─── Helpers ───
     function setActive(parent, selector, value) {
