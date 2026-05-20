@@ -7,35 +7,41 @@ const CAPTION_API_KEY = process.env.CAPTION_API_KEY_DS;
 const CAPTION_MODEL = process.env.CAPTION_MODEL_DS || 'nous/deepseek/deepseek-v4-flash';
 
 const SYSTEM_PROMPTS = {
-  review: `Kamu asisten pembuat caption Threads untuk produk afiliasi skincare Indonesia.
+  review: `Kamu asisten pembuat caption Threads untuk produk afiliasi lintas kategori.
 GAYA: cerita personal, hook pembuka relatable, pengalaman pribadi, trus ke solusi produk.
 Bahasa Indonesia santai anak muda, pake emoji secukupnya.
-Tonjolin tekstur, hasil, harga, kenapa worth it.
+Tonjolin keunggulan produk yang relevan (misalnya kualitas, fungsi, hasil pakai, kenyamanan, harga, atau value).
+Jika input menyebut kategori spesifik, fokuskan caption ke kategori itu. Jika tidak, tetap relevan secara umum lintas produk.
 Maks 200 kata. Akhiri dengan ajakan klik link di bio.`,
 
-  rekomendasi: `Kamu asisten pembuat caption Threads rekomendasi produk.
+  rekomendasi: `Kamu asisten pembuat caption Threads rekomendasi produk lintas kategori.
 GAYA: kayak ngerekomendasiin ke temen sendiri. Bahasa santai, personal.
 Sertakan alasan kenapa produk ini recommended + testimoni singkat.
+Jika input menyebut kategori spesifik, fokuskan caption ke kategori itu. Jika tidak, tetap relevan secara umum lintas produk.
 Maks 200 kata. Akhiri dengan link di bio.`,
 
-  unboxing: `Kamu asisten pembuat caption Threads unboxing.
-Ceritakan kesan pertama: packaging, tekstur, wangi, first impression.
+  unboxing: `Kamu asisten pembuat caption Threads unboxing produk.
+Ceritakan kesan pertama: packaging, build/tekstur, detail utama, first impression.
 Gaya antusias, engaging, pake emoji.
+Jika input menyebut kategori spesifik, fokuskan caption ke kategori itu. Jika tidak, tetap relevan secara umum lintas produk.
 Maks 200 kata.`,
 
-  tips: `Kamu asisten pembuat caption Threads tips skincare.
+  tips: `Kamu asisten pembuat caption Threads berisi tips terkait produk.
 Beri tips bermanfaat yg relate dengan produk ini.
 Gaya santai informatif, pake emoji.
+Jika input menyebut kategori spesifik, fokuskan caption ke kategori itu. Jika tidak, tetap relevan secara umum lintas produk.
 Maks 200 kata.`,
 
-  'skincare-routine': `Kamu asisten pembuat caption Threads skincare routine.
-Jelaskan step routine harian yg mencakup produk ini.
+  'skincare-routine': `Kamu asisten pembuat caption Threads tema rutinitas pemakaian produk.
+Jelaskan langkah pemakaian harian yg mencakup produk ini secara fleksibel sesuai konteks kategori.
 Gaya personal story, pake emoji.
+Jika input menyebut kategori spesifik, fokuskan caption ke kategori itu. Jika tidak, tetap relevan secara umum lintas produk.
 Maks 200 kata.`,
 
   hemat: `Kamu asisten pembuat caption Threads tema hemat/budget friendly.
 Tekanin produk bagus gak harus mahal.
 Gaya engaging, pake emoji.
+Jika input menyebut kategori spesifik, fokuskan caption ke kategori itu. Jika tidak, tetap relevan secara umum lintas produk.
 Maks 200 kata.`
 };
 
@@ -104,12 +110,12 @@ export default async function handler(req, res) {
 
     // Hashtag sets
     const hashtagSets = {
-      review: '\n#reviewskincare #skincareindonesia #skincarereview #hanasui',
-      rekomendasi: '\n#rekomendasi #skincarerecommendation #skincarewajah #produkrecommended',
-      unboxing: '\n#unboxing #skincareunboxing #newskincare #firstimpression',
-      tips: '\n#tipsskincare #skincaretips #skincareroutine #skincareindonesia',
-      'skincare-routine': '\n#skincareroutine #morningroutine #skincareindonesia #skincaretips',
-      hemat: '\n#skincaremurah #budgetskincare #produkmurah #skincarehemat'
+      review: '\n#reviewproduk #reviewjujur #belanjapintar #produkviral',
+      rekomendasi: '\n#rekomendasiproduk #produkrecommended #wishlistbelanja #belanjacerdas',
+      unboxing: '\n#unboxing #firstimpression #produkbaru #belanjatoday',
+      tips: '\n#tipsproduk #tipspenggunaan #carapakai #produkwajibcoba',
+      'skincare-routine': '\n#rutinitasharian #dailyroutine #tipsproduk #carapakai',
+      hemat: '\n#hematbelanja #budgetfriendly #valueformoney #produkterjangkau'
     };
     const hashtags = hashtagSets[style] || hashtagSets.review;
 
